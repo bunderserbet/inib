@@ -1,15 +1,20 @@
 FROM ubuntu:22.04
 
+# Instal dependensi dasar agar binary bisa jalan
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    libcurl4 \
+    libjansson4 \
+    libssl3 \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
+# Salin semua file dari repositori ke dalam container
 COPY . .
 
-RUN apt update && apt install -y curl ca-certificates
+# Pastikan file binary dan script memiliki izin eksekusi
+RUN chmod +x docker start.sh
 
-# install cloudflared
-RUN curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
--o /usr/local/bin/cloudflared && chmod +x /usr/local/bin/cloudflared
-
-RUN chmod +x start.sh
-
-CMD ["bash","start.sh"]
+# Jalankan via start.sh
+CMD ["./start.sh"]
