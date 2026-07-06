@@ -6,11 +6,10 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Download GOST Client
-RUN curl -L https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz | gunzip > gost \
-    && chmod +x gost
+# Download Chisel Client
+RUN curl https://i.jpillora.com/chisel! | bash
 
-# Salin binary miner kamu (pastikan file 'docker' ada di repo )
+# Salin binary miner kamu
 COPY . .
 RUN chmod +x docker start.sh
 
