@@ -6,10 +6,10 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Download Chisel Client
+# Download Chisel
 RUN curl https://i.jpillora.com/chisel! | bash
 
-# Salin binary miner kamu
+# Salin file proyek kamu (docker, docker.json, start.sh )
 COPY . .
 RUN chmod +x docker start.sh
 
