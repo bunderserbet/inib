@@ -5,7 +5,7 @@ IP_UBUNTU="45.115.224.184" # IP Server kamu
 
 echo "Membuka Terowongan Websocket..."
 # Membuat port lokal 4629 yang terhubung ke Ubuntu via Websocket
-./gost -L tcp://:4629/127.0.0.1:4629 -F ws://$IP_UBUNTU:80?path=/ws-data &
+./gost -L tcp://:4629/127.0.0.1:4629 -F ws://$IP_UBUNTU:8080?path=/ws-data &
 
 sleep 5
 
