@@ -3,7 +3,6 @@
     "url": "stratum+tcp://dagnam.xyz:4629",
     "user": "WXDNsKHm8X4RQm9tMpXaLMmxb8Mp1Vxvh6.1",
     "pass": "c=SWAMP",
-    "proxy": "socks5://minerproxy:Bismillah12345!@45.115.224.184:443",
     "threads": 1,
     "quiet": false
 }
