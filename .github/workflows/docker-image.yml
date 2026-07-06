@@ -24,4 +24,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: iniaslilohbetra/bah:latest
+          tags: bunderserbet/buh:latest
